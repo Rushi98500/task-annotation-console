@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@/hooks/useAppStore";
 import { selectTaskById } from "@/store/tasksSlice";
-import { Task, TaskStatus } from "@/domain/types";
+import { TaskStatus } from "@/domain/types";
 import TaskSummary from "./TaskSummary";
 
 interface TaskDetailProps {

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useAppSelector } from "@/hooks/useAppStore";
-import { selectAllTasks, selectTasksLoading, selectTasksError, selectTasksPage, selectTasksPageSize, selectTasksTotal } from "@/store/tasksSlice";
+import { selectAllTasks, selectTasksLoading, selectTasksError, selectTasksPage, selectTasksTotal } from "@/store/tasksSlice";
 import { Task, TaskType, TaskStatus } from "@/domain/types";
 
 type SortField = "updatedAt" | "title" | "annotationCount";
@@ -47,7 +47,6 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
   const loading = useAppSelector(selectTasksLoading);
   const error = useAppSelector(selectTasksError);
   const page = useAppSelector(selectTasksPage);
-  const pageSize = useAppSelector(selectTasksPageSize);
   const total = useAppSelector(selectTasksTotal);
 
   const [search, setSearch] = useState("");

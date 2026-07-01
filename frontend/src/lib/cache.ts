@@ -9,7 +9,6 @@
  */
 
 import localforage from "localforage";
-import { Task } from "@/domain/types";
 import { normalizeTasks } from "@/domain/normalize";
 import { hydrateFromCache, fetchTasks } from "@/store/tasksSlice";
 import type { AppDispatch } from "@/store/store";
