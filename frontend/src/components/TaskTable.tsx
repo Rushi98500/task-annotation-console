@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useAppSelector } from "@/hooks/useAppStore";
-import { selectAllTasks, selectTasksLoading, selectTasksError, selectTasksPage, selectTasksTotal } from "@/store/tasksSlice";
+import { selectAllTasks, selectTasksLoading, selectTasksError, selectTasksPage, selectTasksPageSize, selectTasksTotal } from "@/store/tasksSlice";
 import { Task, TaskType, TaskStatus } from "@/domain/types";
 import { FileText, Image, AudioLines, HelpCircle } from "lucide-react";
 
@@ -44,8 +44,6 @@ function TypeIcon({ type }: { type: TaskType }) {
   }
 }
 
-const SKELETON_ROWS = 12;
-
 function SkeletonRow() {
   return (
     <tr className="border-b border-[#1f2937]/60">
@@ -79,6 +77,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
   const loading = useAppSelector(selectTasksLoading);
   const error = useAppSelector(selectTasksError);
   const page = useAppSelector(selectTasksPage);
+  const pageSize = useAppSelector(selectTasksPageSize);
   const total = useAppSelector(selectTasksTotal);
 
   const [search, setSearch] = useState("");
@@ -189,11 +188,6 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        {loading === "pending" && tasks.length > 0 && (
-          <div className="px-4 py-1.5 text-center text-xs text-indigo-400/70 bg-indigo-500/5 border-b border-[#1f2937]">
-            Refreshing...
-          </div>
-        )}
         <table className="w-full text-sm" role="table">
           <thead className="bg-[#0f1520] sticky top-0 z-10">
             <tr className="border-b border-[#1f2937]">
@@ -223,69 +217,65 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
               </th>
             </tr>
           </thead>
-          <tbody className={loading === "pending" && tasks.length > 0 ? "opacity-50 pointer-events-none" : ""}>
-            {loading === "pending" && tasks.length === 0 && (
-              <>
-                {Array.from({ length: SKELETON_ROWS }, (_, i) => (
+          <tbody>
+            {loading === "pending"
+              ? Array.from({ length: pageSize }, (_, i) => (
                   <SkeletonRow key={`skeleton-${i}`} />
-                ))}
-              </>
-            )}
-            {loading !== "pending" && filteredTasks.length === 0 && (
-              <tr>
-                <td colSpan={6} className="p-8 text-center text-slate-500">
-                  No tasks match your filters.
-                </td>
-              </tr>
-            )}
-            {filteredTasks.map((task, idx) => {
-              const isSelected = selectedTaskId === task.id;
-              return (
-                <tr
-                  key={task.id}
-                  onClick={() => onSelectTask(task)}
-                  className={`cursor-pointer transition-colors border-b border-[#1f2937]/60 ${
-                    isSelected
-                      ? "bg-indigo-500/10 border-l-2 border-l-indigo-500"
-                      : idx % 2 === 0
-                        ? "bg-transparent hover:bg-[#131824]"
-                        : "bg-[#0f1520]/50 hover:bg-[#131824]"
-                  }`}
-                  role="row"
-                >
-                  <td className="px-4 py-3 text-slate-300" title={task.type === "unknown" ? `Unrecognized: ${task.rawStatus}` : undefined}>
-                    <span className="inline-flex items-center gap-2">
-                      <TypeIcon type={task.type} />
-                      <span className="text-xs">{task.type}</span>
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-slate-200 font-medium">{task.title}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(task.status)}`}
-                      title={task.status === "unknown" ? `Raw: "${task.rawStatus}"` : undefined}
-                    >
-                      {task.status === "unknown" ? `\u26A0 ${task.rawStatus}` : task.status.replace("_", " ")}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-slate-300">
-                    {task.assignee?.name ?? <span className="text-slate-500 italic">Unassigned</span>}
-                  </td>
-                  <td className="px-4 py-3 text-right text-slate-400 tabular-nums">{task.annotationCount}</td>
-                  <td className="px-4 py-3 text-right text-slate-500 text-xs tabular-nums">{formatTimestamp(task.updatedAt)}</td>
-                </tr>
-              );
-            })}
+                ))
+              : filteredTasks.length === 0
+                ? (
+                  <tr>
+                    <td colSpan={6} className="p-8 text-center text-slate-500">
+                      No tasks match your filters.
+                    </td>
+                  </tr>
+                )
+                : filteredTasks.map((task, idx) => {
+                    const isSelected = selectedTaskId === task.id;
+                    return (
+                      <tr
+                        key={task.id}
+                        onClick={() => onSelectTask(task)}
+                        className={`cursor-pointer transition-colors border-b border-[#1f2937]/60 ${
+                          isSelected
+                            ? "bg-indigo-500/10 border-l-2 border-l-indigo-500"
+                            : idx % 2 === 0
+                              ? "bg-transparent hover:bg-[#131824]"
+                              : "bg-[#0f1520]/50 hover:bg-[#131824]"
+                        }`}
+                        role="row"
+                      >
+                        <td className="px-4 py-3 text-slate-300" title={task.type === "unknown" ? `Unrecognized: ${task.rawStatus}` : undefined}>
+                          <span className="inline-flex items-center gap-2">
+                            <TypeIcon type={task.type} />
+                            <span className="text-xs">{task.type}</span>
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-slate-200 font-medium">{task.title}</td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(task.status)}`}
+                            title={task.status === "unknown" ? `Raw: "${task.rawStatus}"` : undefined}
+                          >
+                            {task.status === "unknown" ? `\u26A0 ${task.rawStatus}` : task.status.replace("_", " ")}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-slate-300">
+                          {task.assignee?.name ?? <span className="text-slate-500 italic">Unassigned</span>}
+                        </td>
+                        <td className="px-4 py-3 text-right text-slate-400 tabular-nums">{task.annotationCount}</td>
+                        <td className="px-4 py-3 text-right text-slate-500 text-xs tabular-nums">{formatTimestamp(task.updatedAt)}</td>
+                      </tr>
+                    );
+                  })
+            }
           </tbody>
         </table>
       </div>
 
       {/* Pagination info */}
-      <div className="px-4 py-2 border-t border-[#1f2937] bg-[#131824] text-xs text-slate-500 flex justify-between items-center">
-        <span>
-          Page {page} &middot; {filteredTasks.length} of {tasks.length} loaded &middot; {total} total
-        </span>
-        {loading === "pending" && <span className="animate-pulse text-indigo-400">Loading...</span>}
+      <div className="px-4 py-2 border-t border-[#1f2937] bg-[#131824] text-xs text-slate-500">
+        Page {page} &middot; {filteredTasks.length} of {tasks.length} loaded &middot; {total} total
       </div>
     </div>
   );
