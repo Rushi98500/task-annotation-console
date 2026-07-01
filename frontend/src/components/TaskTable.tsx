@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { useAppSelector } from "@/hooks/useAppStore";
 import { selectAllTasks, selectTasksLoading, selectTasksError, selectTasksPage, selectTasksTotal } from "@/store/tasksSlice";
 import { Task, TaskType, TaskStatus } from "@/domain/types";
+import { FileText, Image, AudioLines, HelpCircle } from "lucide-react";
 
 type SortField = "updatedAt" | "title" | "annotationCount";
 type SortDir = "asc" | "desc";
@@ -33,12 +34,13 @@ function statusColor(status: TaskStatus): string {
   }
 }
 
-function typeIcon(type: TaskType): string {
+function TypeIcon({ type }: { type: TaskType }) {
+  const cls = "w-4 h-4 shrink-0";
   switch (type) {
-    case "image": return "🖼️";
-    case "audio": return "🔊";
-    case "text": return "📝";
-    default: return "❓";
+    case "text": return <FileText className={`${cls} text-slate-400`} />;
+    case "image": return <Image className={`${cls} text-slate-400`} />;
+    case "audio": return <AudioLines className={`${cls} text-slate-400`} />;
+    default: return <HelpCircle className={`${cls} text-rose-400`} />;
   }
 }
 
@@ -222,8 +224,10 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
                   role="row"
                 >
                   <td className="px-4 py-3 text-slate-300" title={task.type === "unknown" ? `Unrecognized: ${task.rawStatus}` : undefined}>
-                    <span className="mr-1.5">{typeIcon(task.type)}</span>
-                    <span className="text-xs">{task.type}</span>
+                    <span className="inline-flex items-center gap-2">
+                      <TypeIcon type={task.type} />
+                      <span className="text-xs">{task.type}</span>
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-slate-200 font-medium">{task.title}</td>
                   <td className="px-4 py-3">

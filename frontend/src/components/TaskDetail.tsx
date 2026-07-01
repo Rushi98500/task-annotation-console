@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/hooks/useAppStore";
 import { selectTaskById } from "@/store/tasksSlice";
 import { TaskStatus } from "@/domain/types";
+import { FileText, Image, AudioLines, HelpCircle } from "lucide-react";
 import TaskSummary from "./TaskSummary";
 
 interface TaskDetailProps {
@@ -23,6 +24,16 @@ function statusColor(status: TaskStatus): string {
 function formatTimestamp(ts: number): string {
   if (ts === 0) return "N/A";
   return new Date(ts).toLocaleString();
+}
+
+function TypeIcon({ type }: { type: string }) {
+  const cls = "w-4 h-4 shrink-0 inline-block";
+  switch (type) {
+    case "text": return <FileText className={`${cls} text-slate-400`} />;
+    case "image": return <Image className={`${cls} text-slate-400`} />;
+    case "audio": return <AudioLines className={`${cls} text-slate-400`} />;
+    default: return <HelpCircle className={`${cls} text-rose-400`} />;
+  }
 }
 
 export default function TaskDetail({ taskId }: TaskDetailProps) {
@@ -60,10 +71,11 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Type</p>
-            <p className="text-slate-200">
+            <p className="text-slate-200 inline-flex items-center gap-2">
+              <TypeIcon type={task.type} />
               {task.type}
               {task.type === "unknown" && (
-                <span className="text-orange-400 ml-1 text-xs">(unrecognized)</span>
+                <span className="text-rose-400 text-xs">(unrecognized)</span>
               )}
             </p>
           </div>
