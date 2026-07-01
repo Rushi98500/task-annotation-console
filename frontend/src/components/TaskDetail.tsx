@@ -36,6 +36,80 @@ function TypeIcon({ type }: { type: string }) {
   }
 }
 
+function DetailSkeleton() {
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="h-5 w-40 rounded bg-slate-700 animate-pulse mb-2" />
+        <div className="h-3 w-14 rounded bg-slate-700 animate-pulse" />
+      </div>
+
+      {/* Info grid */}
+      <div className="space-y-4 mb-6 text-sm">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="h-2.5 w-8 rounded bg-slate-700 animate-pulse mb-1.5" />
+            <div className="h-3.5 w-14 rounded bg-slate-700 animate-pulse" />
+          </div>
+          <div>
+            <div className="h-2.5 w-12 rounded bg-slate-700 animate-pulse mb-1.5" />
+            <div className="h-5 w-20 rounded-full bg-slate-700 animate-pulse" />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="h-2.5 w-16 rounded bg-slate-700 animate-pulse mb-1.5" />
+            <div className="h-3.5 w-24 rounded bg-slate-700 animate-pulse" />
+          </div>
+          <div>
+            <div className="h-2.5 w-20 rounded bg-slate-700 animate-pulse mb-1.5" />
+            <div className="h-3.5 w-6 rounded bg-slate-700 animate-pulse" />
+          </div>
+        </div>
+        <div>
+          <div className="h-2.5 w-14 rounded bg-slate-700 animate-pulse mb-1.5" />
+          <div className="h-3 w-32 rounded bg-slate-700 animate-pulse" />
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-[#1f2937] pt-5">
+        {/* AI Summary header */}
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-slate-700 animate-pulse" />
+          <div className="h-2.5 w-20 rounded bg-slate-700 animate-pulse" />
+        </div>
+
+        {/* "Summary for tXX" heading */}
+        <div className="h-4 w-44 rounded bg-slate-700 animate-pulse mb-3" />
+
+        {/* Paragraph line */}
+        <div className="h-3 w-full rounded bg-slate-700 animate-pulse mb-2" />
+
+        {/* Bullet list */}
+        <div className="space-y-2 mb-3 pl-1">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-slate-700 animate-pulse shrink-0" />
+            <div className="h-3 w-36 rounded bg-slate-700 animate-pulse" />
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-1 rounded-full bg-slate-700 animate-pulse shrink-0" />
+            <div className="h-3 w-28 rounded bg-slate-700 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Code block — single-line with background */}
+        <div className="h-7 w-full rounded bg-[#0a0e17] border border-[#1f2937] mb-3" />
+
+        {/* Paragraph lines */}
+        <div className="h-3 w-5/6 rounded bg-slate-700 animate-pulse mb-2" />
+        <div className="h-3 w-2/3 rounded bg-slate-700 animate-pulse" />
+      </div>
+    </div>
+  );
+}
+
 export default function TaskDetail({ taskId }: TaskDetailProps) {
   const task = useAppSelector((state) =>
     taskId ? selectTaskById(state, taskId) : undefined
@@ -50,11 +124,7 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
   }
 
   if (!task) {
-    return (
-      <div className="p-8 text-center text-slate-500 text-sm">
-        Loading task {taskId}...
-      </div>
-    );
+    return <DetailSkeleton />;
   }
 
   return (

@@ -44,6 +44,36 @@ function TypeIcon({ type }: { type: TaskType }) {
   }
 }
 
+const SKELETON_ROWS = 9;
+
+function SkeletonRow() {
+  return (
+    <tr className="border-b border-[#1f2937]/60">
+      <td className="px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-slate-700 animate-pulse" />
+          <div className="w-10 h-3 rounded bg-slate-700 animate-pulse" />
+        </div>
+      </td>
+      <td className="px-4 py-3">
+        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-3/4" />
+      </td>
+      <td className="px-4 py-3">
+        <div className="w-16 h-5 rounded-full bg-slate-700 animate-pulse" />
+      </td>
+      <td className="px-4 py-3">
+        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-1/2" />
+      </td>
+      <td className="px-4 py-3 text-right">
+        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-6 ml-auto" />
+      </td>
+      <td className="px-4 py-3 text-right">
+        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-14 ml-auto" />
+      </td>
+    </tr>
+  );
+}
+
 export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTableProps) {
   const tasks = useAppSelector(selectAllTasks);
   const loading = useAppSelector(selectTasksLoading);
@@ -163,9 +193,6 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        {loading === "pending" && tasks.length === 0 && (
-          <div className="p-6 text-center text-slate-500">Loading tasks...</div>
-        )}
         {loading === "pending" && tasks.length > 0 && (
           <div className="px-4 py-1.5 text-center text-xs text-indigo-400/70 bg-indigo-500/5 border-b border-[#1f2937]">
             Refreshing...
@@ -201,7 +228,14 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
             </tr>
           </thead>
           <tbody>
-            {filteredTasks.length === 0 && (
+            {loading === "pending" && tasks.length === 0 && (
+              <>
+                {Array.from({ length: SKELETON_ROWS }, (_, i) => (
+                  <SkeletonRow key={`skeleton-${i}`} />
+                ))}
+              </>
+            )}
+            {loading !== "pending" && filteredTasks.length === 0 && (
               <tr>
                 <td colSpan={6} className="p-8 text-center text-slate-500">
                   No tasks match your filters.
