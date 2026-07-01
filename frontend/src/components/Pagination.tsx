@@ -17,21 +17,21 @@ export default function Pagination() {
   }
 
   return (
-    <div className="flex items-center gap-2 p-2 border-t border-gray-700 bg-gray-900">
+    <div className="flex items-center gap-3 px-4 py-2.5 border-t border-[#1f2937] bg-[#131824]">
       <button
         onClick={() => loadPage(page - 1)}
         disabled={page <= 1 || loading === "pending"}
-        className="px-3 py-1 text-sm border border-gray-600 text-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+        className="px-4 py-1.5 text-sm font-medium border border-[#1f2937] text-slate-300 rounded-lg transition-colors hover:bg-indigo-500/10 hover:text-indigo-300 hover:border-indigo-500/30 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-slate-300 disabled:hover:border-[#1f2937]"
       >
         Prev
       </button>
-      <span className="text-sm text-gray-400">
+      <span className="text-sm text-slate-500 tabular-nums">
         Page {page} of {totalPages}
       </span>
       <button
         onClick={() => loadPage(page + 1)}
         disabled={page >= totalPages || loading === "pending"}
-        className="px-3 py-1 text-sm border border-gray-600 text-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700"
+        className="px-4 py-1.5 text-sm font-medium border border-[#1f2937] text-slate-300 rounded-lg transition-colors hover:bg-indigo-500/10 hover:text-indigo-300 hover:border-indigo-500/30 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-slate-300 disabled:hover:border-[#1f2937]"
       >
         Next
       </button>

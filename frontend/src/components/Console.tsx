@@ -29,14 +29,16 @@ export default function Console() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-[#0a0e17]">
       <StaleBanner />
-      <header className="p-3 border-b border-gray-700 bg-gray-900">
-        <h1 className="text-lg font-bold">Annotation Activity Console</h1>
+      <header className="px-6 py-3 border-b border-[#1f2937] bg-[#131824]">
+        <h1 className="text-xl font-bold tracking-tight text-slate-100">
+          Annotation Activity Console
+        </h1>
       </header>
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel: table + pagination */}
-        <div className="w-2/3 flex flex-col border-r border-gray-700">
+        <div className="w-2/3 flex flex-col border-r border-[#1f2937] bg-[#0f1520]">
           <div className="flex-1 overflow-auto">
             <TaskTable
               onSelectTask={handleSelectTask}
@@ -46,7 +48,7 @@ export default function Console() {
           <Pagination />
         </div>
         {/* Right panel: detail */}
-        <div className="w-1/3 overflow-auto bg-gray-900">
+        <div className="w-1/3 overflow-auto bg-[#131824]">
           <TaskDetail taskId={selectedTask?.id ?? null} />
         </div>
       </div>

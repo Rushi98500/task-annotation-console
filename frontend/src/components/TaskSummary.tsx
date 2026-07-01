@@ -120,19 +120,19 @@ export default function TaskSummary({ taskId }: TaskSummaryProps) {
   }, [taskId]);
 
   if (state.status === "idle") {
-    return <div className="text-gray-500 text-sm">No summary loaded.</div>;
+    return <div className="text-slate-600 text-sm">No summary loaded.</div>;
   }
 
   return (
     <div className="text-sm">
       {state.status === "loading" && (
-        <div className="flex items-center gap-2 mb-2 text-blue-400 text-xs">
-          <span className="animate-spin inline-block w-3 h-3 border-2 border-blue-600 border-t-blue-300 rounded-full" />
-          Streaming summary...
+        <div className="flex items-center gap-2 mb-3 text-indigo-400 text-xs">
+          <span className="animate-spin inline-block w-3 h-3 border-2 border-indigo-500/30 border-t-indigo-400 rounded-full" />
+          <span className="font-medium">Streaming summary...</span>
         </div>
       )}
       {state.status === "error" && (
-        <div className="mb-2 px-2 py-1 bg-red-900/30 border border-red-800 rounded text-red-300 text-xs">
+        <div className="mb-3 px-3 py-2 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 text-xs">
           {state.error}
         </div>
       )}

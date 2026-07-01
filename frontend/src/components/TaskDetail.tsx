@@ -11,12 +11,12 @@ interface TaskDetailProps {
 
 function statusColor(status: TaskStatus): string {
   switch (status) {
-    case "done": return "bg-green-900/50 text-green-300";
-    case "in_progress": return "bg-blue-900/50 text-blue-300";
-    case "qa": return "bg-yellow-900/50 text-yellow-300";
-    case "blocked": return "bg-red-900/50 text-red-300";
-    case "todo": return "bg-gray-800 text-gray-300";
-    default: return "bg-orange-900/50 text-orange-300";
+    case "done": return "bg-emerald-500/15 text-emerald-400";
+    case "in_progress": return "bg-indigo-500/15 text-indigo-400";
+    case "qa": return "bg-amber-500/15 text-amber-400";
+    case "blocked": return "bg-rose-500/15 text-rose-400";
+    case "todo": return "bg-slate-500/15 text-slate-400";
+    default: return "bg-orange-500/15 text-orange-400";
   }
 }
 
@@ -32,7 +32,7 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
 
   if (!taskId) {
     return (
-      <div className="p-6 text-center text-gray-500 h-full flex items-center justify-center">
+      <div className="p-8 text-center text-slate-600 h-full flex items-center justify-center text-sm">
         Select a task to view details
       </div>
     );
@@ -40,60 +40,83 @@ export default function TaskDetail({ taskId }: TaskDetailProps) {
 
   if (!task) {
     return (
-      <div className="p-6 text-center text-gray-400">
+      <div className="p-8 text-center text-slate-500 text-sm">
         Loading task {taskId}...
       </div>
     );
   }
 
   return (
-    <div className="p-4 overflow-auto h-full">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold mb-1">{task.title}</h2>
-        <p className="text-sm text-gray-400">ID: {task.id}</p>
+    <div className="p-6 overflow-auto h-full">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-lg font-bold text-slate-100 mb-1">{task.title}</h2>
+        <p className="text-xs text-slate-500 font-mono">{task.id}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-        <div>
-          <span className="font-medium text-gray-400">Type:</span>{" "}
-          {task.type}
-          {task.type === "unknown" && (
-            <span className="text-orange-500 ml-1">(unrecognized)</span>
-          )}
+      {/* Info grid */}
+      <div className="space-y-4 mb-6 text-sm">
+        {/* Row 1: Type + Status */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Type</p>
+            <p className="text-slate-200">
+              {task.type}
+              {task.type === "unknown" && (
+                <span className="text-orange-400 ml-1 text-xs">(unrecognized)</span>
+              )}
+            </p>
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Status</p>
+            <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor(task.status)}`}>
+              {task.status === "unknown" ? task.rawStatus : task.status.replace("_", " ")}
+            </span>
+            {task.status === "unknown" && (
+              <span className="text-orange-400 ml-1 text-xs">(unrecognized)</span>
+            )}
+          </div>
         </div>
-        <div>
-          <span className="font-medium text-gray-400">Status:</span>{" "}
-          <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusColor(task.status)}`}>
-            {task.status === "unknown" ? task.rawStatus : task.status}
-          </span>
-          {task.status === "unknown" && (
-            <span className="text-orange-500 ml-1">(unrecognized)</span>
-          )}
+
+        {/* Row 2: Assignee + Annotations */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Assignee</p>
+            <p className="text-slate-200">
+              {task.assignee?.name ?? <span className="text-slate-500 italic">Unassigned</span>}
+            </p>
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Annotations</p>
+            <p className="text-slate-200 tabular-nums">{task.annotationCount}</p>
+          </div>
         </div>
+
+        {/* Row 3: Updated */}
         <div>
-          <span className="font-medium text-gray-400">Assignee:</span>{" "}
-          {task.assignee?.name ?? <span className="text-gray-400 italic">Unassigned</span>}
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Updated</p>
+          <p className="text-slate-300 text-xs tabular-nums">{formatTimestamp(task.updatedAt)}</p>
         </div>
-        <div>
-          <span className="font-medium text-gray-400">Annotations:</span>{" "}
-          {task.annotationCount}
-        </div>
-        <div>
-          <span className="font-medium text-gray-400">Updated:</span>{" "}
-          {formatTimestamp(task.updatedAt)}
-        </div>
+
+        {/* Meta block */}
         {Object.keys(task.meta).length > 0 && (
-          <div className="col-span-2">
-            <span className="font-medium text-gray-400">Meta:</span>{" "}
-            <pre className="inline text-xs bg-gray-800 text-gray-300 p-1 rounded">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Meta</p>
+            <pre className="text-xs bg-[#0a0e17] text-slate-300 p-3 rounded-lg border border-[#1f2937] font-mono overflow-x-auto leading-relaxed">
               {JSON.stringify(task.meta, null, 2)}
             </pre>
           </div>
         )}
       </div>
 
-      <div className="border-t border-gray-700 pt-4">
-        <h3 className="font-medium text-gray-300 mb-2">AI Summary</h3>
+      {/* AI Summary section */}
+      <div className="border-t border-[#1f2937] pt-5">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            AI Summary
+          </h3>
+        </div>
         <TaskSummary taskId={task.id} />
       </div>
     </div>
