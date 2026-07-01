@@ -120,24 +120,24 @@ export default function TaskSummary({ taskId }: TaskSummaryProps) {
   }, [taskId]);
 
   if (state.status === "idle") {
-    return <div className="text-gray-400 text-sm">No summary loaded.</div>;
+    return <div className="text-gray-500 text-sm">No summary loaded.</div>;
   }
 
   return (
     <div className="text-sm">
       {state.status === "loading" && (
-        <div className="flex items-center gap-2 mb-2 text-blue-600 text-xs">
-          <span className="animate-spin inline-block w-3 h-3 border-2 border-blue-300 border-t-blue-600 rounded-full" />
+        <div className="flex items-center gap-2 mb-2 text-blue-400 text-xs">
+          <span className="animate-spin inline-block w-3 h-3 border-2 border-blue-600 border-t-blue-300 rounded-full" />
           Streaming summary...
         </div>
       )}
       {state.status === "error" && (
-        <div className="mb-2 px-2 py-1 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
+        <div className="mb-2 px-2 py-1 bg-red-900/30 border border-red-800 rounded text-red-300 text-xs">
           {state.error}
         </div>
       )}
       {state.content && (
-        <div className="prose prose-sm max-w-none">
+        <div className="prose prose-invert prose-sm max-w-none">
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
             {state.content}
           </ReactMarkdown>

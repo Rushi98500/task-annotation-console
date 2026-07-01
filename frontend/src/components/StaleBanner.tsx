@@ -9,7 +9,7 @@ export default function StaleBanner() {
   if (!isStale) return null;
 
   return (
-    <div className="bg-yellow-100 border-b border-yellow-300 px-4 py-1.5 text-sm text-yellow-800 flex items-center gap-2">
+    <div className="bg-yellow-900/50 border-b border-yellow-700 px-4 py-1.5 text-sm text-yellow-300 flex items-center gap-2">
       <span className="animate-pulse">⚠</span>
       <span>
         Showing cached data — refreshing from server...

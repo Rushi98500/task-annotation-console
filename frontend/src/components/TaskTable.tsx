@@ -24,12 +24,12 @@ function formatTimestamp(ts: number): string {
 
 function statusColor(status: TaskStatus): string {
   switch (status) {
-    case "done": return "bg-green-100 text-green-800";
-    case "in_progress": return "bg-blue-100 text-blue-800";
-    case "qa": return "bg-yellow-100 text-yellow-800";
-    case "blocked": return "bg-red-100 text-red-800";
-    case "todo": return "bg-gray-100 text-gray-800";
-    default: return "bg-orange-100 text-orange-800";
+    case "done": return "bg-green-900/50 text-green-300";
+    case "in_progress": return "bg-blue-900/50 text-blue-300";
+    case "qa": return "bg-yellow-900/50 text-yellow-300";
+    case "blocked": return "bg-red-900/50 text-red-300";
+    case "todo": return "bg-gray-800 text-gray-300";
+    default: return "bg-orange-900/50 text-orange-300";
   }
 }
 
@@ -113,12 +113,12 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
     sortField === field ? (sortDir === "asc" ? " ↑" : " ↓") : "";
 
   if (loading === "idle") {
-    return <div className="p-4 text-gray-500">Ready to load tasks...</div>;
+    return <div className="p-4 text-gray-400">Ready to load tasks...</div>;
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+      <div className="p-4 bg-red-900/30 border border-red-800 rounded text-red-300">
         <strong>Error:</strong> {error}
       </div>
     );
@@ -127,19 +127,19 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
   return (
     <div className="flex flex-col h-full">
       {/* Filters */}
-      <div className="p-3 border-b bg-gray-50 flex flex-wrap gap-3 items-center">
+      <div className="p-3 border-b border-gray-700 bg-gray-900 flex flex-wrap gap-3 items-center">
         <input
           type="text"
           placeholder="Search tasks..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-3 py-1.5 text-sm flex-1 min-w-[200px]"
+          className="border border-gray-600 bg-gray-800 text-gray-100 placeholder-gray-400 rounded px-3 py-1.5 text-sm flex-1 min-w-[200px] focus:outline-none focus:ring-1 focus:ring-blue-500"
           aria-label="Search tasks"
         />
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value as TaskType | "all")}
-          className="border rounded px-2 py-1.5 text-sm"
+          className="border border-gray-600 bg-gray-800 text-gray-100 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           aria-label="Filter by type"
         >
           <option value="all">All Types</option>
@@ -151,7 +151,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as TaskStatus | "all")}
-          className="border rounded px-2 py-1.5 text-sm"
+          className="border border-gray-600 bg-gray-800 text-gray-100 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           aria-label="Filter by status"
         >
           <option value="all">All Statuses</option>
@@ -167,33 +167,33 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
       {/* Table */}
       <div className="flex-1 overflow-auto">
         {loading === "pending" && tasks.length === 0 && (
-          <div className="p-4 text-center text-gray-500">Loading tasks...</div>
+          <div className="p-4 text-center text-gray-400">Loading tasks...</div>
         )}
         {loading === "pending" && tasks.length > 0 && (
-          <div className="p-1 text-center text-xs text-gray-400 bg-gray-50">Refreshing...</div>
+          <div className="p-1 text-center text-xs text-gray-400 bg-gray-800">Refreshing...</div>
         )}
         <table className="w-full text-sm" role="table">
-          <thead className="bg-gray-100 sticky top-0">
+          <thead className="bg-gray-800 sticky top-0">
             <tr>
-              <th className="text-left p-2 font-medium">Type</th>
+              <th className="text-left p-2 font-medium text-gray-300">Type</th>
               <th
-                className="text-left p-2 font-medium cursor-pointer hover:bg-gray-200"
+                className="text-left p-2 font-medium text-gray-300 cursor-pointer hover:bg-gray-700"
                 onClick={() => handleSort("title")}
                 role="columnheader"
               >
                 Title{sortIndicator("title")}
               </th>
-              <th className="text-left p-2 font-medium">Status</th>
-              <th className="text-left p-2 font-medium">Assignee</th>
+              <th className="text-left p-2 font-medium text-gray-300">Status</th>
+              <th className="text-left p-2 font-medium text-gray-300">Assignee</th>
               <th
-                className="text-right p-2 font-medium cursor-pointer hover:bg-gray-200"
+                className="text-right p-2 font-medium text-gray-300 cursor-pointer hover:bg-gray-700"
                 onClick={() => handleSort("annotationCount")}
                 role="columnheader"
               >
                 Annotations{sortIndicator("annotationCount")}
               </th>
               <th
-                className="text-right p-2 font-medium cursor-pointer hover:bg-gray-200"
+                className="text-right p-2 font-medium text-gray-300 cursor-pointer hover:bg-gray-700"
                 onClick={() => handleSort("updatedAt")}
                 role="columnheader"
               >
@@ -204,7 +204,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
           <tbody>
             {filteredTasks.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-gray-500">
+                <td colSpan={6} className="p-4 text-center text-gray-400">
                   No tasks match your filters.
                 </td>
               </tr>
@@ -213,8 +213,8 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
               <tr
                 key={task.id}
                 onClick={() => onSelectTask(task)}
-                className={`border-b cursor-pointer hover:bg-blue-50 ${
-                  selectedTaskId === task.id ? "bg-blue-100" : ""
+                className={`border-b border-gray-700 cursor-pointer hover:bg-gray-800 ${
+                  selectedTaskId === task.id ? "bg-blue-900/40" : ""
                 }`}
                 role="row"
               >
@@ -228,9 +228,9 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
                     {task.status === "unknown" ? `⚠ ${task.rawStatus}` : task.status}
                   </span>
                 </td>
-                <td className="p-2">{task.assignee?.name ?? <span className="text-gray-400 italic">Unassigned</span>}</td>
+                <td className="p-2">{task.assignee?.name ?? <span className="text-gray-500 italic">Unassigned</span>}</td>
                 <td className="p-2 text-right">{task.annotationCount}</td>
-                <td className="p-2 text-right text-gray-500">{formatTimestamp(task.updatedAt)}</td>
+                <td className="p-2 text-right text-gray-400">{formatTimestamp(task.updatedAt)}</td>
               </tr>
             ))}
           </tbody>
@@ -238,7 +238,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
       </div>
 
       {/* Pagination info */}
-      <div className="p-2 border-t bg-gray-50 text-xs text-gray-500 flex justify-between">
+      <div className="p-2 border-t border-gray-700 bg-gray-900 text-xs text-gray-400 flex justify-between">
         <span>
           Page {page} · Showing {filteredTasks.length} of {tasks.length} loaded · Total on server: {total}
         </span>
