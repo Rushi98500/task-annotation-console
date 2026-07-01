@@ -2,12 +2,13 @@
 
 import { useAppSelector } from "@/hooks/useAppStore";
 import { selectTaskById } from "@/store/tasksSlice";
-import { TaskStatus } from "@/domain/types";
+import { Task, TaskStatus } from "@/domain/types";
 import { FileText, Image, AudioLines, HelpCircle } from "lucide-react";
 import TaskSummary from "./TaskSummary";
 
 interface TaskDetailProps {
   taskId: string | null;
+  task?: Task | null;
 }
 
 function statusColor(status: TaskStatus): string {
@@ -100,7 +101,7 @@ function DetailSkeleton() {
         </div>
 
         {/* Code block — single-line with background */}
-        <div className="h-7 w-full rounded bg-[#0a0e17] border border-[#1f2937] mb-3" />
+        <div className="h-7 w-full rounded-md bg-slate-700/80 animate-pulse mb-3 px-3" />
 
         {/* Paragraph lines */}
         <div className="h-3 w-5/6 rounded bg-slate-700 animate-pulse mb-2" />
@@ -110,10 +111,14 @@ function DetailSkeleton() {
   );
 }
 
-export default function TaskDetail({ taskId }: TaskDetailProps) {
-  const task = useAppSelector((state) =>
+export default function TaskDetail({ taskId, task: taskProp }: TaskDetailProps) {
+  const taskFromStore = useAppSelector((state) =>
     taskId ? selectTaskById(state, taskId) : undefined
   );
+
+  // Use store version if available (gets live WS updates), fall back to prop
+  // (survives pagination when setAll removes the entity from the store)
+  const task = taskFromStore ?? taskProp ?? undefined;
 
   if (!taskId) {
     return (

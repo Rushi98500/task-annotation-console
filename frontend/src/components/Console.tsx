@@ -49,7 +49,7 @@ export default function Console() {
         </div>
         {/* Right panel: detail */}
         <div className="w-1/3 overflow-auto bg-[#131824]">
-          <TaskDetail taskId={selectedTask?.id ?? null} />
+          <TaskDetail taskId={selectedTask?.id ?? null} task={selectedTask} />
         </div>
       </div>
     </div>

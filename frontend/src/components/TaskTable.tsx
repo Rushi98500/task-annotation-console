@@ -44,31 +44,31 @@ function TypeIcon({ type }: { type: TaskType }) {
   }
 }
 
-const SKELETON_ROWS = 9;
+const SKELETON_ROWS = 12;
 
 function SkeletonRow() {
   return (
     <tr className="border-b border-[#1f2937]/60">
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-slate-700 animate-pulse" />
-          <div className="w-10 h-3 rounded bg-slate-700 animate-pulse" />
+          <div className="w-4 h-4 rounded bg-slate-700/80 animate-pulse" />
+          <div className="w-10 h-2.5 rounded bg-slate-700/80 animate-pulse" />
         </div>
       </td>
       <td className="px-4 py-3">
-        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-3/4" />
+        <div className="h-3.5 w-[120px] rounded bg-slate-700/80 animate-pulse" />
       </td>
       <td className="px-4 py-3">
-        <div className="w-16 h-5 rounded-full bg-slate-700 animate-pulse" />
+        <div className="w-[62px] h-5 rounded-full bg-slate-700/80 animate-pulse" />
       </td>
       <td className="px-4 py-3">
-        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-1/2" />
+        <div className="h-3.5 w-[68px] rounded bg-slate-700/80 animate-pulse" />
       </td>
       <td className="px-4 py-3 text-right">
-        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-6 ml-auto" />
+        <div className="h-3.5 w-5 rounded bg-slate-700/80 animate-pulse ml-auto" />
       </td>
       <td className="px-4 py-3 text-right">
-        <div className="h-3.5 rounded bg-slate-700 animate-pulse w-14 ml-auto" />
+        <div className="h-2.5 w-[48px] rounded bg-slate-700/80 animate-pulse ml-auto" />
       </td>
     </tr>
   );
@@ -139,11 +139,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
   const sortIndicator = (field: SortField) =>
     sortField === field ? (sortDir === "asc" ? " \u2191" : " \u2193") : "";
 
-  if (loading === "idle") {
-    return <div className="p-6 text-center text-slate-500">Ready to load tasks...</div>;
-  }
-
-  if (error) {
+  if (error && tasks.length === 0) {
     return (
       <div className="p-4 m-4 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-300 text-sm">
         <strong className="font-semibold">Error:</strong> {error}
@@ -227,7 +223,7 @@ export default function TaskTable({ onSelectTask, selectedTaskId }: TaskTablePro
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className={loading === "pending" && tasks.length > 0 ? "opacity-50 pointer-events-none" : ""}>
             {loading === "pending" && tasks.length === 0 && (
               <>
                 {Array.from({ length: SKELETON_ROWS }, (_, i) => (
