@@ -1,6 +1,7 @@
 import { createSlice, createEntityAdapter, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Task, TaskStatus, Assignee } from "@/domain/types";
 import { normalizeTasks } from "@/domain/normalize";
+import { API_BASE_URL } from "@/lib/config";
 import { RootState } from "./store";
 
 /**
@@ -67,7 +68,7 @@ export const fetchTasks = createAsyncThunk(
   "tasks/fetchTasks",
   async ({ page, pageSize }: { page: number; pageSize: number }) => {
     const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
-    const res = await fetch(`/api/tasks?${params}`);
+    const res = await fetch(`${API_BASE_URL}/api/tasks?${params}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     return {

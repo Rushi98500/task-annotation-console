@@ -7,6 +7,7 @@ import {
   applyTaskAssigned,
   applyAnnotationCreated,
 } from "@/store/tasksSlice";
+import { WS_URL } from "@/lib/config";
 import { Assignee } from "@/domain/types";
 
 interface WsMessage {
@@ -14,7 +15,6 @@ interface WsMessage {
   payload: Record<string, unknown>;
 }
 
-const WS_URL = "ws://localhost:4000/ws";
 const MAX_RECONNECT_DELAY = 30000;
 const INITIAL_RECONNECT_DELAY = 1000;
 
@@ -128,10 +128,16 @@ export function useTaskFeed() {
       mountedRef.current = false;
       if (reconnectTimerRef.current) {
         clearTimeout(reconnectTimerRef.current);
+        reconnectTimerRef.current = null;
       }
-      if (wsRef.current) {
-        wsRef.current.close();
+      // Close the specific socket created by this effect instance.
+      // In React 18 StrictMode dev, the effect mounts→cleanup→mounts;
+      // capturing the ref value here ensures we close *this* instance's
+      // socket rather than accidentally closing the replacement socket.
+      const ws = wsRef.current;
+      if (ws) {
         wsRef.current = null;
+        ws.close();
       }
     };
   }, [dispatch]);

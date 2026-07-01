@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
+import { API_BASE_URL } from "@/lib/config";
 
 /**
  * Sanitization strategy:
@@ -50,7 +51,7 @@ export default function TaskSummary({ taskId }: TaskSummaryProps) {
       setState({ status: "loading", content: "" });
 
       try {
-        const res = await fetch(`/api/tasks/${taskId}/summary`, {
+        const res = await fetch(`${API_BASE_URL}/api/tasks/${taskId}/summary`, {
           signal: controller.signal,
         });
 
